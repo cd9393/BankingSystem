@@ -1,40 +1,44 @@
 package BankingSystem.Bank;
 
+import BankingSystem.Account.AccountDAOImpl;
+import BankingSystem.Account.Account;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Bank {
     private List<Account> accounts;
+    private AccountDAOImpl accountDAO;
     private AccountCreator accountCreator;
 
-    public Bank () {
+    public Bank (String fileName) {
         this.accounts = new ArrayList<>();
         this.accountCreator = new AccountCreator();
+        this.accountDAO = new AccountDAOImpl(fileName);
     }
 
     public Account createAccount() {
         Account account = accountCreator.generateAccount();
         accounts.add(account);
+        accountDAO.addAccount(account);
         return account;
     }
 
+    public void getAllAccount() {
+        this.accounts = accountDAO.getAllAccounts();
+    }
+
     public Account findAccount(Account accountToFind) {
-        for(Account account : accounts) {
-            if(accountToFind.getCardNo().equals(account.getCardNo())) {
-                return account;
-            }
-        }
-        return null;
+        Account foundAccount = accountDAO.getAccount(accountToFind.getCardNo());
+
+        return foundAccount;
     }
 
     public boolean hasAccount(Account accountToFind){
         boolean found = false;
 
-        for(Account account : accounts) {
-            if(accountToFind.getCardNo().equals(account.getCardNo())) {
-                found = true;
-                break;
-            }
+        if(findAccount(accountToFind) != null) {
+            found = true;
         }
         return found;
     }

@@ -1,5 +1,6 @@
 package BankingSystem;
 
+import BankingSystem.Account.Account;
 import BankingSystem.Bank.*;
 
 import java.util.Scanner;
@@ -9,9 +10,9 @@ public class Menu {
     private Scanner scanner;
     private Bank bank;
 
-    public Menu() {
+    public Menu(Bank bank) {
         this.scanner = new Scanner(System.in);
-        this.bank = new Bank();
+        this.bank = bank;
     }
 
     public void run() {
@@ -52,6 +53,9 @@ public class Menu {
 
         if(bank.hasAccount(account)) {
             Account foundAccount = bank.findAccount(account);
+            if(foundAccount == null) {
+                System.out.println("No found account!");
+            }
             if(foundAccount != null && foundAccount.checkPIN(account.getPin())){
                 displayAccount(bank.findAccount(account));
             }

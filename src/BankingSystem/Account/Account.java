@@ -1,4 +1,4 @@
-package BankingSystem.Bank;
+package BankingSystem.Account;
 
 public class Account {
     private String cardNo;
@@ -9,6 +9,12 @@ public class Account {
         this.cardNo = cardNo;
         this.pin = pin;
         this.balance = 0L;
+    }
+
+    public Account(String cardNo, String pin, Long balance){
+        this.cardNo = cardNo;
+        this.pin = pin;
+        this.balance = balance;
     }
 
     public String getCardNo() {
