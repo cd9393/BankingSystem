@@ -12,3 +12,5 @@ Details for each stage can be found from the following links below:
 Stage One Description [here](https://github.com/cd9393/BankingSystem/tree/stageOne)
 
 Stage Two Description [here](https://github.com/cd9393/BankingSystem/tree/stageTwo)
+
+Stage Three Description [here](https://github.com/cd9393/BankingSystem/tree/stageThree)
