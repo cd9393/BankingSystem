@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class Menu {
 
+
     private Scanner scanner;
     private Bank bank;
 
@@ -51,13 +52,13 @@ public class Menu {
     private void loginToAccount() {
         Account account = getAccountDetails();
 
-        if(bank.hasAccount(account)) {
-            Account foundAccount = bank.findAccount(account);
+        if(bank.hasAccount(account.getCardNo())) {
+            Account foundAccount = bank.findAccount(account.getCardNo());
             if(foundAccount == null) {
                 System.out.println("No found account!");
             }
             if(foundAccount != null && foundAccount.checkPIN(account.getPin())){
-                displayAccount(bank.findAccount(account));
+                displayAccount(foundAccount.getCardNo());
             }
         } else {
             System.out.println("Wrong card number or PIN!");
@@ -72,13 +73,18 @@ public class Menu {
         return new Account(cardNo,pin);
     }
 
-    private void displayAccount(Account account) {
+    private void displayAccount(String cardNo) {
         System.out.println("You have successfully logged in!");
         System.out.println();
+        Account account;
         boolean isRunning = true;
         while(isRunning){
+            account = bank.findAccount(cardNo);
             System.out.println("1. Balance\n" +
-                    "2. Log out\n" +
+                    "2. Add income\n" +
+                    "3. Do transfer\n" +
+                    "4. Close account\n" +
+                    "5. Log out\n" +
                     "0. Exit");
             int choice = Integer.parseInt(scanner.nextLine());
             switch (choice) {
@@ -86,6 +92,15 @@ public class Menu {
                     System.out.println("Balance: " + account.getBalance());
                     break;
                 case 2:
+                    addIncome(account);
+                    break;
+                case 3:
+                    transferMoney(account);
+                    break;
+                case 4:
+                    bank.closeAccount(account);
+                    break;
+                case 5:
                     System.out.println("You have successfully logged out!");
                     System.out.println();
                     isRunning = false;
@@ -98,6 +113,39 @@ public class Menu {
                     break;
             }
         }
+    }
+
+    private void transferMoney(Account account) {
+        System.out.println("Enter card number:");
+        String cardNoToTransferTo = scanner.nextLine();
+        if(!bank.passesLuhnsAlgo(cardNoToTransferTo)){
+            System.out.println("Probably you made a mistake in the card number. \n" +
+                    "Please try again!");
+        } else {
+            if (bank.hasAccount(cardNoToTransferTo)) {
+                long amount = getAmountToTransfer();
+                if (amount <= account.getBalance()) {
+                    bank.transferFunds(account, bank.findAccount(cardNoToTransferTo), amount);
+                } else {
+                    System.out.println("Not enough money!");
+                    System.out.println();
+                }
+            } else {
+                System.out.println("Such a card does not exist.");
+                System.out.println();
+            }
+        }
+    }
+
+    private long getAmountToTransfer(){
+        System.out.println("Enter how much money you want to transfer");
+        return Long.parseLong(scanner.nextLine());
+    }
+
+    private void addIncome(Account account){
+        System.out.println("Enter income:");
+        long amount = Long.parseLong(scanner.nextLine());
+        bank.addIncome(account,amount);
     }
 
     private void exit() {

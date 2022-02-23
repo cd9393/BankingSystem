@@ -28,18 +28,50 @@ public class Bank {
         this.accounts = accountDAO.getAllAccounts();
     }
 
-    public Account findAccount(Account accountToFind) {
-        Account foundAccount = accountDAO.getAccount(accountToFind.getCardNo());
+    public Account findAccount(String cardNoToFind) {
+        Account foundAccount = accountDAO.getAccount(cardNoToFind);
 
         return foundAccount;
     }
 
-    public boolean hasAccount(Account accountToFind){
+    public boolean hasAccount(String cardNoToFind){
         boolean found = false;
 
-        if(findAccount(accountToFind) != null) {
+        if(findAccount(cardNoToFind) != null) {
             found = true;
         }
         return found;
+    }
+
+    public void closeAccount(Account account){
+        accountDAO.closeAccount(account);
+    }
+
+    public void addIncome(Account account, long amount) {
+        accountDAO.depositIncome(account,amount);
+    }
+
+    public void transferFunds(Account accountToWithdraw, Account accountToDeposit, long amount) {
+        accountDAO.transfer(accountToWithdraw,accountToDeposit,amount);
+    }
+
+    public boolean passesLuhnsAlgo(String cardNo){
+        int sum = 0;
+        int digit;
+        for(int i = 0; i < cardNo.length(); i++) {
+            digit = Character.getNumericValue(cardNo.charAt(i));
+            if (i % 2 == 0) {
+                digit *= 2;
+                if(digit > 9) {
+                    digit -= 9;
+                }
+            }
+            sum += digit;
+        }
+        if(sum % 10 == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
